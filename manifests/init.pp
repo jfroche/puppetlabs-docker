@@ -477,47 +477,17 @@ class docker(
 ) inherits docker::params {
 
 
-  if $::osfamily {
-    assert_type(Pattern[/^(Debian|RedHat)$/], $::osfamily) |$a, $b| {
-      fail translate(('This module only works on Debian or Red Hat based systems.'))
-    }
-  }
-
   if ($default_gateway) and (!$bridge) {
-    fail translate(('You must provide the $bridge parameter.'))
-  }
-
-  if $log_level {
-    assert_type(Pattern[/^(debug|info|warn|error|fatal)$/], $log_level) |$a, $b| {
-        fail translate(('log_level must be one of debug, info, warn, error or fatal'))
-    }
-  }
-
-  if $log_driver {
-    assert_type(Pattern[/^(none|json-file|syslog|journald|gelf|fluentd|splunk)$/], $log_driver) |$a, $b| {
-      fail translate(('log_driver must be one of none, json-file, syslog, journald, gelf, fluentd or splunk'))
-    }
-  }
-
-  if $storage_driver {
-    assert_type(Pattern[/^(aufs|devicemapper|btrfs|overlay|overlay2|vfs|zfs)$/], $storage_driver) |$a, $b| {
-      fail translate(('Valid values for storage_driver are aufs, devicemapper, btrfs, overlay, overlay2, vfs, zfs.'))
-    }
-  }
-
-  if $dm_fs {
-    assert_type(Pattern[/^(ext4|xfs)$/], $dm_fs) |$a, $b| {
-      fail translate(('Only ext4 and xfs are supported currently for dm_fs.'))
-    }
+    fail (('You must provide the $bridge parameter.'))
   }
 
   if ($dm_loopdatasize or $dm_loopmetadatasize) and ($dm_datadev or $dm_metadatadev) {
-    fail translate(('You should provide parameters only for loop lvm or direct lvm, not both.'))
+    fail (('You should provide parameters only for loop lvm or direct lvm, not both.'))
   }
 
 # lint:ignore:140chars
   if ($dm_datadev or $dm_metadatadev) and $dm_thinpooldev {
-    fail translate(('You can use the $dm_thinpooldev parameter, or the $dm_datadev and $dm_metadatadev parameter pair, but you cannot use both.'))
+    fail (('You can use the $dm_thinpooldev parameter, or the $dm_datadev and $dm_metadatadev parameter pair, but you cannot use both.'))
   }
 # lint:endignore
 
@@ -526,17 +496,17 @@ class docker(
   }
 
   if ($dm_datadev and !$dm_metadatadev) or (!$dm_datadev and $dm_metadatadev) {
-    fail translate(('You need to provide both $dm_datadev and $dm_metadatadev parameters for direct lvm.'))
+    fail (('You need to provide both $dm_datadev and $dm_metadatadev parameters for direct lvm.'))
   }
 
   if ($dm_basesize or $dm_fs or $dm_mkfsarg or $dm_mountopt or $dm_blocksize or $dm_loopdatasize or
       $dm_loopmetadatasize or $dm_datadev or $dm_metadatadev) and ($storage_driver != 'devicemapper') {
-    fail translate(('Values for dm_ variables will be ignored unless storage_driver is set to devicemapper.'))
+    fail (('Values for dm_ variables will be ignored unless storage_driver is set to devicemapper.'))
   }
 
   if($tls_enable) {
     if(!$tcp_bind) {
-        fail translate(('You need to provide tcp bind parameter for TLS.'))
+        fail (('You need to provide tcp bind parameter for TLS.'))
     }
   }
 

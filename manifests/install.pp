@@ -5,11 +5,6 @@
 #
 class docker::install {
   $docker_start_command = $docker::docker_start_command
-  if $::osfamily {
-    assert_type(Pattern[/^(Debian|RedHat)$/], $::osfamily) |$a, $b| {
-      fail translate(('This module only works on Debian or RedHat.'))
-    }
-  }
   if $docker::version and $docker::ensure != 'absent' {
     $ensure = $docker::version
   } else {
